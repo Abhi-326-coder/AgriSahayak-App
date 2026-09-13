@@ -1,0 +1,3 @@
+"""
+AgriSahayak Backend package init.
+"""

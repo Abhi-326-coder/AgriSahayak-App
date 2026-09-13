@@ -1,0 +1,56 @@
+version: "3.9"
+
+# =============================================
+# AgriSahayak Docker Compose
+# Backend + PostgreSQL only
+# The Expo mobile app runs locally (not containerized)
+# =============================================
+
+services:
+  # ---- PostgreSQL Database ----
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: agrisahayak-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: agrisahayak_user
+      POSTGRES_PASSWORD: agrisahayak_pass
+      POSTGRES_DB: agrisahayak
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agrisahayak_user -d agrisahayak"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---- FastAPI Backend ----
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: agrisahayak-backend
+    restart: unless-stopped
+    environment:
+      APP_NAME: AgriSahayak
+      ENVIRONMENT: development
+      DEBUG: "true"
+      DATABASE_URL: postgresql://agrisahayak_user:agrisahayak_pass@db:5432/agrisahayak
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  default:
+    name: agrisahayak-network
