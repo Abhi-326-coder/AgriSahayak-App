@@ -15,6 +15,7 @@ interface HeaderProps {
   subtitle?: string;
   showBack?: boolean;
   rightComponent?: React.ReactNode;
+  rightAction?: React.ReactNode;
   style?: ViewStyle;
 }
 
@@ -23,9 +24,11 @@ export const Header: React.FC<HeaderProps> = ({
   subtitle,
   showBack = false,
   rightComponent,
+  rightAction,
   style,
 }) => {
   const router = useRouter();
+  const rightElement = rightAction || rightComponent;
 
   return (
     <View style={[styles.container, style]}>
@@ -49,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({
             </Text>
           )}
         </View>
-        {rightComponent && <View style={styles.right}>{rightComponent}</View>}
+        {rightElement && <View style={styles.right}>{rightElement}</View>}
       </View>
     </View>
   );

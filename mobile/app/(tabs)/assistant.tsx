@@ -150,9 +150,9 @@ export default function VoiceAdvisorScreen() {
               </Text>
             )}
 
-            {response.advice && (
+            {response.message && (
               <View style={styles.adviceBox}>
-                <Text style={styles.adviceText}>{response.advice}</Text>
+                <Text style={styles.adviceText}>{response.message}</Text>
               </View>
             )}
 
@@ -165,14 +165,14 @@ export default function VoiceAdvisorScreen() {
                   onPress={() => router.push('/(tabs)/marketplace')}
                 />
               )}
-              {response.next_action === 'GOV_SCHEMES' && (
+              {response.next_action === 'GOVERNMENT_BENEFITS' && (
                 <Button
                   title="View Eligible Benefits →"
                   variant="primary"
                   onPress={() => router.push('/government-benefits' as any)}
                 />
               )}
-              {response.next_action === 'CROP_DISEASE' && (
+              {response.next_action === 'CROP_ANALYSIS' && (
                 <Button
                   title="Open Disease Diagnosis →"
                   variant="primary"

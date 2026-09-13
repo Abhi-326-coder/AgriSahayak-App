@@ -80,6 +80,11 @@ export const Colors = {
   goldTransparent15: 'rgba(217, 164, 65, 0.15)',
   goldTransparent30: 'rgba(217, 164, 65, 0.30)',
   successTransparent12: 'rgba(47, 107, 79, 0.12)',
+  // ---- Aliases ----
+  cardBackground: '#FFFFFF',
+  textInverse: '#FFFFFF',
+  accentGold: '#D9A441',
+  secondaryGreen: '#2F6B4F',
 } as const;
 
 export type ColorKey = keyof typeof Colors;

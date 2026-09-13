@@ -34,7 +34,7 @@ export default function MarketplaceScreen() {
       {
         crop: 'Tomato',
         quantity: parseFloat(quantity) || 2000,
-        quality: 'Grade A',
+        quality: 'Good',
         location: 'Bengaluru Rural',
       },
       {

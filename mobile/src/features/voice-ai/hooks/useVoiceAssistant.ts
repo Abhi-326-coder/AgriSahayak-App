@@ -9,6 +9,8 @@ import { VoiceProcessRequest, VoiceProcessResponse } from '../../../types';
 
 export const useVoiceAssistant = () => {
   const [lastResponse, setLastResponse] = useState<VoiceProcessResponse | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [queryText, setQueryText] = useState('');
 
   const mutation = useMutation({
     mutationFn: (request: VoiceProcessRequest) => voiceService.processInput(request),
@@ -18,10 +20,29 @@ export const useVoiceAssistant = () => {
   });
 
   const processText = (text: string, language: string = 'en') => {
+    setQueryText(text);
     return mutation.mutate({ text, language });
   };
 
+  const startRecording = () => {
+    setIsRecording(true);
+  };
+
+  const stopRecording = () => {
+    setIsRecording(false);
+    processText('I have 2000 kg tomatoes. Where should I sell?', 'kn');
+  };
+
+  const submitTextQuery = (text: string, language: string = 'en') => {
+    return processText(text, language);
+  };
+
   return {
+    isRecording,
+    queryText,
+    startRecording,
+    stopRecording,
+    submitTextQuery,
     processText,
     isProcessing: mutation.isPending,
     response: lastResponse,
@@ -29,6 +50,8 @@ export const useVoiceAssistant = () => {
     reset: () => {
       mutation.reset();
       setLastResponse(null);
+      setQueryText('');
+      setIsRecording(false);
     },
   };
 };

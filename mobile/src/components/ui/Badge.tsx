@@ -8,6 +8,7 @@ type BadgeVariant = 'success' | 'warning' | 'error' | 'info' | 'gold' | 'primary
 interface BadgeProps {
   label: string;
   variant?: BadgeVariant;
+  size?: 'sm' | 'md' | 'lg';
   dot?: boolean;
   style?: ViewStyle;
   textStyle?: TextStyle;

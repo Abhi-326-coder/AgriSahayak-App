@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Colors } from '../../constants/colors';
 import { BorderRadius } from '../../constants/spacing';
 
+import { useRouter } from 'expo-router';
+
 interface QuickActionItem {
   id: string;
   emoji: string;
@@ -14,13 +16,74 @@ interface QuickActionItem {
 }
 
 interface QuickActionGridProps {
-  actions: QuickActionItem[];
+  actions?: QuickActionItem[];
 }
 
 export const QuickActionGrid: React.FC<QuickActionGridProps> = ({ actions }) => {
+  const router = useRouter();
+
+  const defaultActions: QuickActionItem[] = [
+    {
+      id: 'sell',
+      emoji: '🏪',
+      title: 'Smart Marketplace',
+      subtitle: 'Verified buyers & direct pricing',
+      bgColor: '#FFFFFF',
+      iconBgColor: '#E8F5E9',
+      onPress: () => router.push('/(tabs)/marketplace'),
+    },
+    {
+      id: 'quality',
+      emoji: '🔬',
+      title: 'Crop Quality Scan',
+      subtitle: 'AI disease & grade detection',
+      bgColor: '#FFFFFF',
+      iconBgColor: '#FFF3E0',
+      onPress: () => router.push('/crop-analysis' as any),
+    },
+    {
+      id: 'schemes',
+      emoji: '🏛️',
+      title: 'Govt Benefits',
+      subtitle: 'PM-KISAN, KUSUM subsidies',
+      bgColor: '#FFFFFF',
+      iconBgColor: '#E1F5FE',
+      onPress: () => router.push('/government-benefits' as any),
+    },
+    {
+      id: 'market',
+      emoji: '📈',
+      title: 'Market Intelligence',
+      subtitle: 'Live APMC Mandi rates',
+      bgColor: '#FFFFFF',
+      iconBgColor: '#F3E5F5',
+      onPress: () => router.push('/market-intelligence' as any),
+    },
+    {
+      id: 'weather',
+      emoji: '🌦️',
+      title: 'Weather Advisory',
+      subtitle: 'Microclimate & spraying alert',
+      bgColor: '#FFFFFF',
+      iconBgColor: '#E0F7FA',
+      onPress: () => router.push('/weather' as any),
+    },
+    {
+      id: 'storage',
+      emoji: '❄️',
+      title: 'Smart Storage',
+      subtitle: 'Find nearby cold storage hubs',
+      bgColor: '#FFFFFF',
+      iconBgColor: '#E8EAF6',
+      onPress: () => router.push('/smart-storage' as any),
+    },
+  ];
+
+  const items = actions || defaultActions;
+
   return (
     <View style={styles.grid}>
-      {actions.map((action) => (
+      {items.map((action) => (
         <Pressable
           key={action.id}
           style={({ pressed }) => [

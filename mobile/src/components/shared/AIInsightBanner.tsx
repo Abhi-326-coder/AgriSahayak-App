@@ -5,8 +5,12 @@ import { Colors } from '../../constants/colors';
 import { BorderRadius, Shadows } from '../../constants/spacing';
 
 interface AIInsightBannerProps {
-  profit: string;
+  profit?: string;
+  title?: string;
   description: string;
+  impactText?: string;
+  actionLabel?: string;
+  onPressAction?: () => void;
   strategy?: string;
   allocation?: { label: string; percent: number; color: string }[];
   onExplore?: () => void;
@@ -14,12 +18,19 @@ interface AIInsightBannerProps {
 
 export const AIInsightBanner: React.FC<AIInsightBannerProps> = ({
   profit,
+  title,
   description,
+  impactText,
+  actionLabel,
+  onPressAction,
   strategy,
   allocation,
   onExplore,
 }) => {
   const router = useRouter();
+  const displayProfit = profit || impactText || '+₹2,880';
+  const handleAction = onPressAction || onExplore || (() => router.push('/(tabs)/marketplace'));
+
 
   return (
     <View style={styles.container}>
@@ -33,7 +44,7 @@ export const AIInsightBanner: React.FC<AIInsightBannerProps> = ({
           <Text style={styles.aiLabelText}>AgriSahayak Decision Engine</Text>
         </View>
         <View style={styles.profitBadge}>
-          <Text style={styles.profitText}>{profit}</Text>
+          <Text style={styles.profitText}>{displayProfit}</Text>
         </View>
       </View>
 
@@ -76,11 +87,11 @@ export const AIInsightBanner: React.FC<AIInsightBannerProps> = ({
       {/* CTA */}
       <Pressable
         style={({ pressed }) => [styles.ctaButton, pressed && styles.ctaPressed]}
-        onPress={onExplore ?? (() => router.push('/(tabs)/marketplace'))}
+        onPress={handleAction}
         accessibilityRole="button"
-        accessibilityLabel="Explore AI Strategy"
+        accessibilityLabel={actionLabel ?? 'Explore AI Strategy'}
       >
-        <Text style={styles.ctaText}>Explore AI Strategy →</Text>
+        <Text style={styles.ctaText}>{actionLabel ?? 'Explore AI Strategy →'}</Text>
       </Pressable>
     </View>
   );

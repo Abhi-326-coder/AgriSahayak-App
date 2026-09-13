@@ -38,10 +38,8 @@ export default function ProfileScreen() {
         <Text style={styles.sectionHeading}>Land & Cultivation Details</Text>
         <View style={styles.detailsCard}>
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>District & State</Text>
-            <Text style={styles.detailValue}>
-              {farmer.district}, {farmer.state}
-            </Text>
+            <Text style={styles.detailLabel}>Location</Text>
+            <Text style={styles.detailValue}>{farmer.location}</Text>
           </View>
           <View style={styles.divider} />
           <View style={styles.detailRow}>

@@ -22,7 +22,7 @@ export const LanguageSelector: React.FC = () => {
           <Pressable
             key={lang.code}
             style={[styles.chip, isSelected && styles.chipSelected]}
-            onPress={() => setLanguage(lang.code)}
+            onPress={() => setLanguage(lang.code as any)}
           >
             <Text style={[styles.chipText, isSelected && styles.chipTextSelected]}>
               {lang.name}

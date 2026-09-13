@@ -17,7 +17,8 @@ type ButtonVariant = 'primary' | 'secondary' | 'gold' | 'outline' | 'ghost' | 'd
 interface ButtonProps extends Omit<PressableProps, 'style'> {
   variant?: ButtonVariant;
   size?: 'sm' | 'md' | 'lg';
-  label: string;
+  label?: string;
+  title?: string;
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
   loading?: boolean;
@@ -75,6 +76,7 @@ export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
   label,
+  title,
   icon,
   iconPosition = 'right',
   loading = false,
@@ -86,6 +88,7 @@ export const Button: React.FC<ButtonProps> = ({
   const variantStyle = variantStyles[variant];
   const sizeStyle = sizeStyles[size];
   const isDisabled = disabled || loading;
+  const buttonText = title ?? label ?? '';
 
   return (
     <Pressable
@@ -109,7 +112,7 @@ export const Button: React.FC<ButtonProps> = ({
       ) : (
         <>
           {icon && iconPosition === 'left' && icon}
-          <Text style={[styles.label, variantStyle.text, sizeStyle.text]}>{label}</Text>
+          <Text style={[styles.label, variantStyle.text, sizeStyle.text]}>{buttonText}</Text>
           {icon && iconPosition === 'right' && icon}
         </>
       )}

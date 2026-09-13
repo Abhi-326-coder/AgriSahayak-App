@@ -13,6 +13,7 @@ import { BorderRadius, Shadows } from '../../constants/spacing';
 interface BuyerCardProps {
   buyer: Buyer | MatchedBuyer;
   rank?: number;
+  onPressContact?: () => void;
 }
 
 const getBuyerTypeEmoji = (type: string): string => {

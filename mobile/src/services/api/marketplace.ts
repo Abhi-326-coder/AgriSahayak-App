@@ -34,3 +34,11 @@ export const marketplaceService = {
     return apiClient.post<MatchResponse>('/marketplace/match', request);
   },
 };
+
+export const cropService = {
+  getCrops: async () => apiClient.get<any[]>('/crops'),
+};
+
+export const schemeService = {
+  getSchemes: async () => apiClient.get<any[]>('/schemes'),
+};

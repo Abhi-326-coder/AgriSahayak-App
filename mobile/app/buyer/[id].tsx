@@ -8,23 +8,27 @@ import { Badge } from '../../src/components/ui/Badge';
 import { Colors } from '../../src/constants/colors';
 import { Spacing, BorderRadius, Shadows } from '../../src/constants/spacing';
 import { useBuyers } from '../../src/features/marketplace/hooks/useMarketplace';
+import { Buyer } from '../../src/types';
 
 export default function BuyerDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { data: buyers } = useBuyers();
 
-  const buyer = buyers?.find((b) => b.id.toString() === id) || {
+  const buyer: Buyer = buyers?.find((b) => b.id.toString() === id) || {
     id: Number(id) || 1,
     name: 'GreenHarvest Foods Ltd',
-    company_type: 'Food Processor & Exporter',
-    crop_interested: 'Tomato (Hybrid / Fresh)',
-    price_offered_per_quintal: 3100,
-    distance_km: 25,
+    type: 'Food Processor',
+    crop: 'Tomato',
+    price: 3100,
+    distance: 25,
     match_score: 94,
-    payment_terms: 'Instant UPI on Weighbridge Weighment',
     verified: true,
-    rating: 4.8,
+    location: 'Bengaluru Rural',
+    min_quantity: 500,
+    max_quantity: 5000,
+    payment_terms: 'Instant UPI on Weighbridge Weighment',
+    description: 'Direct procurement partner for institutional supply',
   };
 
   return (
@@ -40,7 +44,7 @@ export default function BuyerDetailScreen() {
           <View style={styles.headerRow}>
             <View>
               <Text style={styles.buyerName}>{buyer.name}</Text>
-              <Text style={styles.buyerType}>{buyer.company_type}</Text>
+              <Text style={styles.buyerType}>{buyer.type}</Text>
             </View>
             <View style={styles.scoreCircle}>
               <Text style={styles.scoreVal}>{buyer.match_score}%</Text>
@@ -50,8 +54,8 @@ export default function BuyerDetailScreen() {
 
           <View style={styles.badgesRow}>
             {buyer.verified && <Badge label="✓ Verified Buyer" variant="success" size="sm" />}
-            <Badge label={`★ ${buyer.rating} Rating`} variant="gold" size="sm" />
-            <Badge label={`📍 ${buyer.distance_km} km away`} variant="info" size="sm" />
+            <Badge label="★ 4.8 Rating" variant="gold" size="sm" />
+            <Badge label={`📍 ${buyer.distance} km away`} variant="info" size="sm" />
           </View>
         </View>
 
@@ -61,13 +65,13 @@ export default function BuyerDetailScreen() {
           <View style={styles.termRow}>
             <Text style={styles.termLabel}>Price Offered</Text>
             <Text style={styles.termValueHighlight}>
-              ₹{buyer.price_offered_per_quintal} / Quintal
+              ₹{buyer.price} / Quintal
             </Text>
           </View>
           <View style={styles.divider} />
           <View style={styles.termRow}>
             <Text style={styles.termLabel}>Target Crop</Text>
-            <Text style={styles.termValue}>🍅 {buyer.crop_interested}</Text>
+            <Text style={styles.termValue}>🍅 {buyer.crop}</Text>
           </View>
           <View style={styles.divider} />
           <View style={styles.termRow}>

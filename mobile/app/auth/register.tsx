@@ -18,15 +18,14 @@ export default function RegisterScreen() {
 
   const handleRegister = () => {
     setFarmer({
-      id: Date.now(),
+      id: String(Date.now()),
       name: name || 'Ravi Kumar',
       phone: phone || '9876543210',
       language: 'kn',
       location: location || 'Devenahalli, Bengaluru Rural',
-      district: 'Bengaluru Rural',
-      state: 'Karnataka',
       total_acres: parseFloat(acres) || 3,
       primary_crop: crop || 'Tomato',
+      created_at: new Date().toISOString(),
     });
     router.replace('/(tabs)');
   };
