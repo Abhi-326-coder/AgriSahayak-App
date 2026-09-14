@@ -38,6 +38,7 @@ class Settings(BaseSettings):
     llm_model: str = Field(default="", alias="LLM_MODEL")
 
     # Voice AI (Phase 7)
+    gemini_api_key: str = Field(default="", alias="GEMINI_API_KEY")
     sarvam_api_key: str = Field(default="", alias="SARVAM_API_KEY")
     bhashini_api_key: str = Field(default="", alias="BHASHINI_API_KEY")
 
