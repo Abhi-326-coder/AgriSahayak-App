@@ -121,6 +121,13 @@ app.add_exception_handler(Exception, generic_exception_handler)
 # Include all API v1 routes
 app.include_router(api_router, prefix=settings.api_v1_prefix)
 
+from fastapi.staticfiles import StaticFiles
+import os
+
+# Create static directory if it doesn't exist
+os.makedirs("static", exist_ok=True)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 # Root endpoint
 @app.get("/", tags=["Root"])

@@ -6,8 +6,9 @@ import {
   ScrollView,
   Pressable,
   TextInput,
-  Animated,
+  Platform,
 } from 'react-native';
+import { WebView } from 'react-native-webview';
 import { useRouter } from 'expo-router';
 import { Screen } from '../../src/components/layout/Screen';
 import { Header } from '../../src/components/layout/Header';
@@ -29,25 +30,14 @@ export default function VoiceAdvisorScreen() {
   const router = useRouter();
   const { farmer } = useFarmerStore();
   const [inputText, setInputText] = useState('');
+  
+  // Keep original hooks for the text input and mock responses
   const {
-    isRecording,
     isProcessing,
-    queryText,
     response,
-    error,
-    startRecording,
-    stopRecording,
     submitTextQuery,
     reset,
   } = useVoiceAssistant();
-
-  const handleMicPress = () => {
-    if (isRecording) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
-  };
 
   const handleSendText = () => {
     if (inputText.trim()) {
@@ -60,6 +50,11 @@ export default function VoiceAdvisorScreen() {
     submitTextQuery(prompt, farmer?.language || 'kn');
   };
 
+  // Get the base URL for the webview
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://127.0.0.1:8000/api/v1';
+  const baseUrl = apiUrl.replace('/api/v1', '');
+  const webViewUrl = `${baseUrl}/static/index.html`;
+
   return (
     <Screen style={styles.screen}>
       <Header
@@ -71,59 +66,28 @@ export default function VoiceAdvisorScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}
       >
-        {/* Voice Interaction Zone */}
-        <View style={styles.voiceHero}>
-          <Text style={styles.heroInstruction}>
-            {isRecording
-              ? '🎙️ Listening to your voice... Speak now'
-              : isProcessing
-              ? '🤖 AgriSahayak AI is analyzing your query...'
-              : 'Tap microphone and speak in Kannada, Hindi or English'}
-          </Text>
-
-          {/* Large Accessible Microphone Button */}
-          <Pressable
-            style={[
-              styles.micButton,
-              isRecording && styles.micButtonRecording,
-              isProcessing && styles.micButtonProcessing,
-            ]}
-            onPress={handleMicPress}
-            disabled={isProcessing}
-          >
-            <Text style={styles.micEmoji}>{isRecording ? '⏹️' : '🎙️'}</Text>
-          </Pressable>
-
-          <Text style={styles.micStatus}>
-            {isRecording
-              ? 'Tap to Stop & Process'
-              : isProcessing
-              ? 'Connecting to AI Agent...'
-              : 'Tap to Speak'}
-          </Text>
-
-          {/* Audio Waveform visualization */}
-          <View style={styles.waveformContainer}>
-            {[40, 65, 90, 45, 80, 100, 70, 50, 85, 40].map((h, i) => (
-              <View
-                key={i}
-                style={[
-                  styles.waveformBar,
-                  {
-                    height: isRecording ? Math.max(12, (h * Math.random()) | 0) : 10,
-                    backgroundColor: isRecording
-                      ? Colors.accentGold
-                      : isProcessing
-                      ? Colors.primaryLight
-                      : Colors.border,
-                  },
-                ]}
-              />
-            ))}
-          </View>
+        {/* Live API WebView Component Replacing the old Voice Hero */}
+        <View style={styles.liveVoiceContainer}>
+          {Platform.OS === 'web' ? (
+            <iframe
+              src={webViewUrl}
+              style={{ flex: 1, width: '100%', height: '100%', border: 'none' }}
+              allow="camera; microphone"
+            />
+          ) : (
+            <WebView 
+              source={{ uri: webViewUrl }} 
+              style={{ flex: 1, backgroundColor: 'transparent' }}
+              javaScriptEnabled={true}
+              domStorageEnabled={true}
+              allowsInlineMediaPlayback={true}
+              mediaPlaybackRequiresUserAction={false}
+              mediaCapturePermissionGrantType="grantIfSameHostElsePrompt"
+            />
+          )}
         </View>
 
-        {/* Structured AI Response Result */}
+        {/* Structured AI Response Result (from text queries) */}
         {response && (
           <View style={styles.responseCard}>
             <View style={styles.responseHeader}>
@@ -233,58 +197,14 @@ const styles = StyleSheet.create({
   content: {
     padding: Spacing.md,
   },
-  voiceHero: {
+  liveVoiceContainer: {
+    height: 400, // Fixed height for the embedded WebView
+    width: '100%',
     backgroundColor: Colors.primaryDark,
     borderRadius: BorderRadius.xl,
-    padding: Spacing.lg,
-    alignItems: 'center',
+    overflow: 'hidden',
     marginBottom: Spacing.md,
     ...Shadows.md,
-  },
-  heroInstruction: {
-    fontSize: 14,
-    color: Colors.textInverse,
-    textAlign: 'center',
-    marginBottom: Spacing.lg,
-    lineHeight: 20,
-    opacity: 0.9,
-  },
-  micButton: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    backgroundColor: Colors.accentGold,
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...Shadows.lg,
-    elevation: 8,
-  },
-  micButtonRecording: {
-    backgroundColor: '#E53935',
-    transform: [{ scale: 1.08 }],
-  },
-  micButtonProcessing: {
-    backgroundColor: Colors.primaryLight,
-  },
-  micEmoji: {
-    fontSize: 44,
-  },
-  micStatus: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: Colors.textInverse,
-    marginTop: Spacing.md,
-  },
-  waveformContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    height: 32,
-    marginTop: Spacing.md,
-  },
-  waveformBar: {
-    width: 4,
-    borderRadius: 2,
   },
   responseCard: {
     backgroundColor: Colors.cardBackground,
